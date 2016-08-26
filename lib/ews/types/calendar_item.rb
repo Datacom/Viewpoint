@@ -13,6 +13,7 @@ module Viewpoint::EWS::Types
       time_zone:    [:time_zone, :text],
       start:        [:start, :text],
       end:          [:end, :text],
+      uid:          [:u_i_d, :text],
       location:     [:location, :text],
       all_day?:     [:is_all_day_event, :text],
       legacy_free_busy_status: [:legacy_free_busy_status, :text],
