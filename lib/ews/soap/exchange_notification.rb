@@ -46,7 +46,7 @@ module Viewpoint::EWS::SOAP
     #         :event_types=> %w{NewMailEvent DeletedEvent},
     #       }},
     #       ]
-    def subscribe(subscriptions)
+    def subscribe(subscriptions, opts = {})
       req = build_soap! do |type, builder|
         if(type == :header)
         else
@@ -63,7 +63,7 @@ module Viewpoint::EWS::SOAP
           }
         end
       end
-      do_soap_request(req, response_class: EwsResponse)
+      do_soap_request(req, opts.merge({response_class: EwsResponse}))
     end
 
     # End a pull notification subscription.
