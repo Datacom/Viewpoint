@@ -206,6 +206,8 @@ module Viewpoint::EWS::SOAP
       @log.debug <<-EOF.gsub(/^ {8}/, '')
         Sending SOAP Request:
         ----------------
+        #{opts[:headers] ? opts[:headers].to_a.map{ |a| a.join(": ") }.join("\n") : "No caller-specified headers"}
+        ----------------
         #{soapmsg}
         ----------------
       EOF
@@ -216,6 +218,8 @@ module Viewpoint::EWS::SOAP
     def do_async_soap_request(soapmsg, opts = {})
       @log.debug <<-EOF.gsub(/^ {8}/, '')
         Sending SOAP Request:
+        ----------------
+        #{opts[:headers] ? opts[:headers].to_a.map{ |a| a.join(": ") }.join("\n") : "No caller-specified headers"}
         ----------------
         #{soapmsg}
         ----------------
