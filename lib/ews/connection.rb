@@ -72,13 +72,15 @@ class Viewpoint::EWS::Connection
     @log.debug <<-EOF.gsub(/^ {6}/, '')
       Received SOAP Response:
       ----------------
-      #{respmsg.headers.to_a.map{ |a| a.join(": ") }.join("\n")}
+      #{respmsg.header.all.to_a.map{ |a| a.join(": ") }.join("\n")}
       ----------------
       #{Nokogiri::XML(respmsg.body).to_xml}
       ----------------
     EOF
     content = opts[:raw_response] ? respmsg.body : ews.parse_soap_response(respmsg.body, opts)
-    opts[:return_headers] ? { headers: respmsg.headers, content: content } : content
+    opts[:return_headers] ? { headers: respmsg.header.all,
+                              cookies: respmsg.cookies.map { |c| { c.name => c.value } }.reduce(&:merge),
+                              content: content } : content
   end
 
   # Send a GET to the web service
