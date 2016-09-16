@@ -206,7 +206,8 @@ module Viewpoint::EWS::SOAP
       @log.debug <<-EOF.gsub(/^ {8}/, '')
         Sending SOAP Request:
         ----------------
-        #{opts[:headers] ? opts[:headers].to_a.map{ |a| a.join(": ") }.join("\n") : "No caller-specified headers"}
+        #{opts[:headers].present? ? opts[:headers].to_a.map{ |a| a.join(": ") }.join("\n") :
+          "No caller-specified headers"}
         ----------------
         #{soapmsg}
         ----------------
@@ -219,7 +220,8 @@ module Viewpoint::EWS::SOAP
       @log.debug <<-EOF.gsub(/^ {8}/, '')
         Sending SOAP Request:
         ----------------
-        #{opts[:headers] ? opts[:headers].to_a.map{ |a| a.join(": ") }.join("\n") : "No caller-specified headers"}
+        #{opts[:headers].present? ? opts[:headers].to_a.map{ |a| a.join(": ") }.join("\n") :
+          "No caller-specified headers"}
         ----------------
         #{soapmsg}
         ----------------
