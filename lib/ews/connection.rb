@@ -78,9 +78,11 @@ class Viewpoint::EWS::Connection
       ----------------
     EOF
     content = opts[:raw_response] ? respmsg.body : ews.parse_soap_response(respmsg.body, opts)
-    opts[:return_headers] ? { headers: respmsg.header.all,
-                              cookies: respmsg.cookies.map { |c| { c.name => c.value } }.reduce(&:merge),
-                              content: content } : content
+    opts[:return_headers] ? {
+        headers: respmsg.header.all,
+        cookies: (respmsg.cookies.map { |c| { c.name => c.value } }.reduce(&:merge) if respmsg.cookies),
+        content: content
+    } : content
   end
 
   # Send a GET to the web service
