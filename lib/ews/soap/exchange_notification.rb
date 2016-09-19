@@ -46,7 +46,7 @@ module Viewpoint::EWS::SOAP
     #         :event_types=> %w{NewMailEvent DeletedEvent},
     #       }},
     #       ]
-    def subscribe(subscriptions)
+    def subscribe(subscriptions, opts = {})
       req = build_soap! do |type, builder|
         if(type == :header)
         else
@@ -63,7 +63,7 @@ module Viewpoint::EWS::SOAP
           }
         end
       end
-      do_soap_request(req, response_class: EwsResponse)
+      do_soap_request(req, opts.merge({response_class: EwsResponse}))
     end
 
     # End a pull notification subscription.
@@ -109,7 +109,7 @@ module Viewpoint::EWS::SOAP
     # @param subscription_ids   [Array<String>] An array of Subscription identifiers
     # @param connection_timeout [Fixnum] Specifies the number of minutes to keep a connection open
     #        https://msdn.microsoft.com/EN-US/library/ff406137(v=exchg.150).aspx
-    def get_streaming_events(subscription_ids, connection_timeout = 30)
+    def get_streaming_events(subscription_ids, connection_timeout = 30, opts = {})
       req = build_soap! do |type, builder|
         if(type == :header)
         else
@@ -121,7 +121,7 @@ module Viewpoint::EWS::SOAP
         end
       end
 
-      do_async_soap_request(req)
+      do_async_soap_request(req, opts)
     end
 
     # ------- convenience methods ------- #
