@@ -68,11 +68,14 @@ class Viewpoint::EWS::Connection
   # @param soapmsg [String]
   # @param opts [Hash] misc opts for handling the Response
   def dispatch(ews, soapmsg, opts)
+    # TODO TODO TODO: Set HTTPClient cookies
     respmsg = post(soapmsg, opts)
     @log.debug <<-EOF.gsub(/^ {6}/, '')
       Received SOAP Response:
       ----------------
       #{respmsg.header.all.to_a.map{ |a| a.join(": ") }.join("\n")}
+      ----------------
+      #{@httpcli.cookies.map { |c| { c.name => c.value } }.join("\n")}
       ----------------
       #{Nokogiri::XML(respmsg.body).to_xml}
       ----------------
@@ -80,7 +83,10 @@ class Viewpoint::EWS::Connection
     content = opts[:raw_response] ? respmsg.body : ews.parse_soap_response(respmsg.body, opts)
     opts[:return_headers] ? {
         headers: respmsg.header.all,
-        cookies: (respmsg.cookies.map { |c| { c.name => c.value } }.reduce(&:merge) if respmsg.cookies),
+        # We are using @httpcli.cookies because for some reason, resp.cookies ends up empty in some cases (both
+        # Exchange 2010) - something to do with NTLM auth, I think. The cookie is still in the HTTPClient cookie jar,
+        # however.
+        cookies: (@httpcli.cookies.map { |c| { c.name => c.value } }.reduce(&:merge) if @httpcli.cookies),
         content: content
     } : content
   end
