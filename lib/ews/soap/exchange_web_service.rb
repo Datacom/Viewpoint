@@ -209,6 +209,8 @@ module Viewpoint::EWS::SOAP
         #{opts[:headers].present? ? opts[:headers].to_a.map{ |a| a.join(": ") }.join("\n") :
           "No caller-specified headers"}
         ----------------
+        #{opts[:cookies].present? ? opts[:cookies].join("\n") : "No caller-specified cookies"}
+        ----------------
         #{soapmsg}
         ----------------
       EOF
@@ -222,6 +224,8 @@ module Viewpoint::EWS::SOAP
         ----------------
         #{opts[:headers].present? ? opts[:headers].to_a.map{ |a| a.join(": ") }.join("\n") :
           "No caller-specified headers"}
+        ----------------
+        #{opts[:cookies].present? ? opts[:cookies].join("\n") : "No caller-specified cookies"}
         ----------------
         #{soapmsg}
         ----------------

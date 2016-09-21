@@ -67,8 +67,11 @@ class Viewpoint::EWS::Connection
   #   #parse_soap_response
   # @param soapmsg [String]
   # @param opts [Hash] misc opts for handling the Response
-  def dispatch(ews, soapmsg, opts)
-    # TODO TODO TODO: Set HTTPClient cookies
+  def dispatch(ews, soapmsg, opts = {})
+    # We set the cookies on the client rather than manually as headers, because otherwise HTTPClient gets confused
+    # and ends up adding multiple Cookie headers...
+    prepare_cookies(opts[:cookies]) if opts[:cookies].present?
+
     respmsg = post(soapmsg, opts)
     @log.debug <<-EOF.gsub(/^ {6}/, '')
       Received SOAP Response:
@@ -115,10 +118,18 @@ class Viewpoint::EWS::Connection
     authenticate
     headers = opts[:headers] || {}
     headers = headers.merge({'Content-Type' => 'text/xml'})
+    prepare_cookies(opts[:cookies]) if opts[:cookies].present?
     @httpcli.post_async(@endpoint, xmldoc, headers)
   end
 
   private
+
+  # Add user-specified cookies in the form {"name" => "cookienamehere", "value" => "cookievaluehere" } to the cookie
+  # jar
+  def prepare_cookies(cookies)
+    @httpcli.cookie_manager.cookies = []
+    cookies.each { |c| @httpcli.cookie_manager.parse("#{c["name"]}=#{c["value"]};", URI.parse(@endpoint)) }
+  end
 
   def check_response(resp, opts = {})
     case resp.status
