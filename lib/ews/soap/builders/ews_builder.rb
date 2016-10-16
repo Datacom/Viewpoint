@@ -850,6 +850,22 @@ module Viewpoint::EWS::SOAP
       }
     end
 
+    def cancel_calendar_item!(item)
+      nbuild[NS_EWS_TYPES].CancelCalendarItem {
+        item.each_pair {|k,v|
+          self.send("#{k}!", v)
+        }
+      }
+    end
+
+    def decline_item!(item)
+      nbuild[NS_EWS_TYPES].DeclineItem {
+        item.each_pair {|k,v|
+          self.send("#{k}!", v)
+        }
+      }
+    end
+
     def calendar_item_type!(type)
       nbuild[NS_EWS_TYPES].CalendarItemType(type)
     end
