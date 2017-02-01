@@ -97,7 +97,8 @@ module Viewpoint::EWS::Types
         data[:item_changes] = [{item_id: self.item_id, updates: item_updates}]
         rm = ews.update_item(data).response_messages.first
         if rm && rm.success?
-          self.get_all_properties!
+          # This method should not be called, otherwise the Junction implementation will raise an error.
+          # self.get_all_properties!
           self
         else
           raise EwsCreateItemError, "Could not update calendar item. #{rm.code}: #{rm.message_text}" unless rm
