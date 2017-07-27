@@ -532,6 +532,10 @@ module Viewpoint::EWS::SOAP
       }
     end
 
+    def query_string!(query_string)
+      nbuild[NS_EWS_MESSAGES].QueryString(query_string)
+    end
+
     def and_r(expr)
       and_or('And', expr)
     end
